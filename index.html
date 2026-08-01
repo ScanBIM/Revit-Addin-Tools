@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScanBIM | Professional Revit Extensions & Automation</title>
+  <meta name="description" content="Professional Revit extensions by ScanBIM. Animate your Revit Section Box into cinematic MP4 videos, GIFs, and PNG sequences with CutScene." />
+  <meta name="keywords" content="ScanBIM, CutScene, Revit plugin, section box animation, Revit animation, BIM automation, Revit 2025, MP4 export, GIF export" />
+  <meta property="og:title" content="ScanBIM | Professional Revit Extensions" />
+  <meta property="og:description" content="Discover ScanBIM extensions for BIM coordination, modeling automation, and Revit production." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #050b14;
+      --bg2:    #0a1424;
+      --card:   rgba(255,255,255,0.03);
+      --accent: #0078d7;
+      --accent2:#00b4d8;
+      --glow:   rgba(0,120,215,0.3);
+      --text:   #e8edf4;
+      --muted:  #7a8fa6;
+      --border: rgba(255,255,255,0.08);
+      --green:  #22c55e;
+      --r:      16px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+    /* BACKGROUND GLOWS */
+    .glow { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.2; pointer-events: none; z-index: 0; }
+    .glow-a { width: 400px; height: 400px; background: var(--accent); left: -150px; top: 15%; }
+    .glow-b { width: 450px; height: 450px; background: var(--accent2); right: -200px; top: 40%; }
+
+    /* STICKY NAV CAPSULE */
+    nav {
+      position: sticky; top: 16px; z-index: 100;
+      width: min(1180px, calc(100% - 32px));
+      margin: 16px auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 24px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(5,11,20,0.8);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; }
+    .nav-logo { height: 45px; width: auto; object-fit: contain; filter: drop-shadow(0 0 8px rgba(0, 120, 215, 0.4)) brightness(1.15); }
+    .nav-logo-text { font-size: 1.35rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    .nav-logo-text span { color: var(--accent2); }
+    .nav-links { display: flex; gap: 12px; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500;
+      padding: 8px 16px; border-radius: 99px; transition: color .2s, background .2s;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-cta {
+      background: var(--accent); color: #fff; padding: 10px 22px;
+      border-radius: 999px; font-weight: 600; font-size: 0.88rem;
+      text-decoration: none; transition: background .2s, transform .15s;
+    }
+    .nav-cta:hover { background: #005fa3; transform: translateY(-1px); }
+
+    /* HERO PORTFOLIO SECTION */
+    .hero {
+      width: min(1180px, calc(100% - 32px));
+      margin: 40px auto 20px;
+      min-height: 600px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 48px;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; text-align: center; margin-top: 20px; gap: 36px; }
+      .hero-visual { order: -1; }
+    }
+    .hero-content { max-width: 660px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,120,215,0.12); border: 1px solid rgba(0,120,215,0.3);
+      color: var(--accent2); padding: 8px 16px; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; margin-bottom: 24px;
+    }
+    .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent2); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }
+    
+    .hero h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); font-weight: 900; line-height: 1.15; letter-spacing: -1.5px; margin-bottom: 20px; }
+    .hero h1 span { background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.15rem; color: var(--muted); line-height: 1.7; margin-bottom: 36px; }
+    
+    .hero-buttons { display: flex; gap: 16px; justify-content: flex-start; flex-wrap: wrap; }
+    @media (max-width: 900px) { .hero-buttons { justify-content: center; } }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, #005fa3 100%);
+      color: #fff; padding: 14px 32px; border-radius: 10px;
+      font-weight: 700; font-size: 0.95rem; text-decoration: none;
+      box-shadow: 0 0 35px var(--glow); transition: transform .2s, box-shadow .2s;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px var(--glow); }
+    
+    .btn-secondary {
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); padding: 14px 32px; border-radius: 10px;
+      font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: background .2s, transform .2s;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+    
+    /* STATS BLOCK */
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+    .stat-card {
+      border: 1px solid var(--border); background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border-radius: 16px; padding: 18px; text-align: left;
+    }
+    .stat-card b { display: block; font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, #fff 0%, var(--accent2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-card span { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+
+    /* HERO VISUAL WITH SPINNING GLOW BORDER */
+    .hero-visual { display: grid; place-items: center; min-height: 400px; }
+    .logo-frame {
+      width: min(360px, 80vw); aspect-ratio: 1/1; border-radius: 36px;
+      position: relative; display: grid; place-items: center; overflow: hidden;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,120,215,0.15);
+      animation: float 6s ease-in-out infinite;
+    }
+    .logo-frame:before {
+      content: ""; position: absolute; inset: -2px;
+      background: conic-gradient(from 80deg, transparent, var(--accent), var(--accent2), transparent 45%);
+      animation: spin 8s linear infinite;
+    }
+    .logo-frame:after {
+      content: ""; position: absolute; inset: 2px; border-radius: 34px; background: var(--bg);
+    }
+    .logo-frame img { position: relative; z-index: 2; width: 72%; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    
+    .scan-line {
+      position: absolute; z-index: 3; left: 10%; right: 10%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+      animation: scan 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes scan {
+      0%, 100% { top: 15%; opacity: 0; }
+      10%, 90% { opacity: 1; }
+      100% { top: 85%; opacity: 0; }
+    }
+
+    /* CATEGORIES / QUICK PORTFOLIO LIST */
+    .category-row {
+      width: min(1180px, calc(100% - 32px));
+      margin: 40px auto 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      z-index: 1; position: relative;
+    }
+    .cat-card {
+      border: 1px solid var(--border); background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 6px;
+      transition: border-color .25s, transform .2s;
+      text-decoration: none; color: inherit;
+    }
+    .cat-card:hover { border-color: rgba(0, 120, 215, 0.45); transform: translateY(-2px); }
+    .cat-card b { font-size: 1.05rem; font-weight: 700; color: #fff; }
+    .cat-card span { font-size: 0.85rem; color: var(--muted); }
+    .cat-card .badge {
+      display: inline-block; align-self: flex-start; margin-top: 8px;
+      font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 100px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted);
+    }
+    .cat-card.active-prod .badge {
+      background: rgba(0,120,215,0.15); border-color: rgba(0,120,215,0.3); color: var(--accent2);
+    }
+
+    /* MEDIA CONTAINER (UI + ANIMS) */
+    .media-section { padding: 0 24px 80px; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+    .showcase-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; max-width: 1100px; width: 100%; }
+    @media (max-width: 900px) { .showcase-grid { grid-template-columns: 1fr; } }
+    
+    .media-frame {
+      border-radius: 16px; border: 1px solid var(--border); overflow: hidden;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.5), 0 0 50px rgba(0,120,215,0.1);
+      background: var(--bg2); display: flex; flex-direction: column;
+    }
+    .media-bar { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .media-dots { display: flex; gap: 6px; }
+    .dot-r { width:10px; height:10px; border-radius:50%; background:#ff5f57; }
+    .dot-y { width:10px; height:10px; border-radius:50%; background:#febc2e; }
+    .dot-g { width:10px; height:10px; border-radius:50%; background:#28c840; }
+    .media-title { font-size: 0.78rem; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; }
+    .media-content { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .media-content img, .media-content video { width: 100%; height: auto; display: block; object-fit: contain; }
+
+    /* SECTIONS */
+    section { padding: 90px 24px; position: relative; z-index: 1; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size:0.75rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent2); margin-bottom:12px; }
+    .section-title { font-size:clamp(1.8rem,3.5vw,2.6rem); font-weight:800; letter-spacing:-1px; line-height:1.18; margin-bottom:16px; }
+    .section-sub { color:var(--muted); font-size:1.05rem; max-width:580px; }
+
+    /* PRODUCT FOCUS SECTION HEADER */
+    .product-focus-header {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 24px;
+    }
+    .product-focus-logo { height: 60px; width: auto; filter: drop-shadow(0 0 10px rgba(0, 120, 215, 0.45)); }
+    .product-focus-title { font-size: 2rem; font-weight: 800; }
+
+    /* ANIMATION GALLERY */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
+    .gallery-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+      transition: transform .2s, border-color .2s;
+    }
+    .gallery-card:hover { transform: translateY(-3px); border-color: rgba(0,120,215,0.4); }
+    .gallery-card img { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid var(--border); }
+    .gallery-info { padding: 16px; }
+    .gallery-info h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+    .gallery-info p { font-size: 0.82rem; color: var(--muted); }
+
+    /* FEATURES GRID */
+    .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; margin-top:60px; }
+    .feat-card {
+      background:var(--card); border:1px solid var(--border); border-radius:var(--r);
+      padding:32px; transition:border-color .2s,transform .2s,box-shadow .2s; position:relative; overflow:hidden;
+    }
+    .feat-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(0,120,215,0.05) 0%,transparent 60%); opacity:0; transition:opacity .3s; }
+    .feat-card:hover { border-color:rgba(0,120,215,0.3); transform:translateY(-4px); box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .feat-card:hover::before { opacity:1; }
+    .feat-icon { width:44px; height:44px; border-radius:10px; background:rgba(0,120,215,0.15); border:1px solid rgba(0,120,215,0.35); display:flex; align-items:center; justify-content:center; font-size:1.3rem; margin-bottom:20px; }
+    .feat-card h3 { font-size:1.05rem; font-weight:700; margin-bottom:10px; }
+    .feat-card p { font-size:0.9rem; color:var(--muted); line-height:1.7; }
+
+    /* WORKFLOW STEPS */
+    .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:28px; margin-top:60px; }
+    .step { text-align:center; padding:20px 16px; }
+    .step-num { width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%); display:flex; align-items:center; justify-content:center; font-size:1.15rem; font-weight:800; margin:0 auto 20px; box-shadow:0 0 25px var(--glow); }
+    .step h3 { font-size:1rem; font-weight:700; margin-bottom:10px; }
+    .step p { font-size:0.88rem; color:var(--muted); }
+
+    /* COMPATIBILITY */
+    .versions-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:40px; }
+    .ver-badge { background:var(--card); border:1px solid var(--border); padding:10px 20px; border-radius:8px; font-weight:700; font-size:0.9rem; transition:border-color .2s,color .2s; }
+    .ver-badge:hover { border-color:var(--accent2); color:var(--accent2); }
+    .ver-badge.latest { border-color:rgba(0,120,215,0.5); color:var(--accent2); }
+
+    /* PRICING */
+    .pricing-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(310px, 1fr)); gap:24px; margin-top:60px; max-width:1100px; margin-left:auto; margin-right:auto; }
+    .price-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 36px 32px;
+      transition: transform .2s;
+    }
+    .price-card:hover { transform:translateY(-4px); }
+    .price-card.featured { background:linear-gradient(135deg,rgba(0,120,215,0.15) 0%,rgba(0,180,216,0.08) 100%); border-color:rgba(0,120,215,0.5); box-shadow:0 0 60px rgba(0,120,215,0.15); }
+    .price-badge { font-size:0.72rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--accent2); background:rgba(0,120,215,0.15); padding:4px 12px; border-radius:100px; display:inline-block; margin-bottom:16px; }
+    .price-title { font-size:1.1rem; font-weight:700; margin-bottom:8px; }
+    .price-amount { font-size:2.4rem; font-weight:900; margin-bottom:4px; }
+    .price-amount span { font-size:1rem; font-weight:400; color:var(--muted); }
+    .price-desc { font-size:0.88rem; color:var(--muted); margin-bottom:24px; }
+    .price-features { list-style:none; margin-bottom:28px; }
+    .price-features li { font-size:0.9rem; padding:7px 0; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    .price-features li:last-child { border-bottom:none; }
+    .check { color:var(--green); font-size:1.1rem; }
+    .price-btn {
+      margin-top: auto;
+      display:block; text-align:center; padding:14px; border-radius:10px; font-weight:700; font-size:0.95rem; text-decoration:none; transition:transform .2s,box-shadow .2s;
+    }
+    .price-btn.outline { border:1px solid var(--border); color:var(--text); background:transparent; }
+    .price-btn.outline:hover { border-color:var(--accent); color:var(--accent); }
+    .price-btn.filled { background:linear-gradient(135deg,var(--accent) 0%,#005fa3 100%); color:#fff; box-shadow:0 0 30px var(--glow); }
+    .price-btn.filled:hover { transform:translateY(-2px); box-shadow:0 0 50px var(--glow); }
+
+    /* FAQ */
+    .faq-list { margin-top:50px; display:flex; flex-direction:column; gap:12px; max-width:800px; }
+    .faq-item { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .faq-q { width:100%; background:none; border:none; color:var(--text); font-family:inherit; font-size:0.97rem; font-weight:600; padding:20px 24px; text-align:left; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:color .2s; }
+    .faq-q:hover { color:var(--accent2); }
+    .faq-q .arrow { transition:transform .3s; font-size:0.8rem; }
+    .faq-item.open .faq-q .arrow { transform:rotate(180deg); }
+    .faq-a { max-height:0; overflow:hidden; transition:max-height .35s ease,padding .3s; font-size:0.9rem; color:var(--muted); line-height:1.75; }
+    .faq-item.open .faq-a { max-height:300px; padding:0 24px 20px; }
+
+    /* CTA */
+    #cta { background:var(--bg); text-align:center; padding:100px 24px; }
+    .cta-box { max-width:700px; margin:0 auto; background:linear-gradient(135deg,rgba(0,120,215,0.12) 0%,rgba(0,180,216,0.06) 100%); border:1px solid rgba(0,120,215,0.3); border-radius:24px; padding:64px 48px; box-shadow:0 0 80px rgba(0,120,215,0.12); }
+    .cta-box h2 { font-size:2.2rem; font-weight:800; letter-spacing:-1px; margin-bottom:16px; }
+    .cta-box p { color:var(--muted); font-size:1rem; margin-bottom:36px; }
+    .cta-note { font-size:0.82rem; color:var(--muted); margin-top:16px; }
+
+    /* FOOTER */
+    footer { background:var(--bg2); border-top:1px solid var(--border); padding:48px 60px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px; }
+    .footer-logo-container { display: flex; align-items: center; gap: 12px; }
+    .footer-logo { height: 45px; width: auto; filter: drop-shadow(0 0 8px rgba(0, 120, 215, 0.35)) brightness(1.15); }
+    .footer-links { display:flex; gap:28px; flex-wrap:wrap; }
+    .footer-links a { color:var(--muted); text-decoration:none; font-size:0.88rem; transition:color .2s; }
+    .footer-links a:hover { color:var(--text); }
+    .footer-copy { color:var(--muted); font-size:0.82rem; }
+
+    /* PRIVACY */
+    #privacy { padding:60px 24px; max-width:800px; margin:0 auto; color:var(--muted); font-size:0.88rem; line-height:1.8; }
+
+    /* RESPONSIVE */
+    @media (max-width:768px) {
+      nav { padding:14px 24px; }
+      .nav-links { display:none; }
+      section { padding:70px 20px; }
+      footer { padding:36px 24px; flex-direction:column; text-align:center; }
+      .cta-box { padding:40px 24px; }
+    }
+
+    /* FADE-UP */
+    .fade-up { opacity:0; transform:translateY(30px); transition:opacity .6s ease,transform .6s ease; }
+    .fade-up.visible { opacity:1; transform:translateY(0); }
+  </style>
+</head>
+<body>
+
+<div class="glow glow-a"></div>
+<div class="glow glow-b"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <img class="nav-logo" src="images/scanbim transparent background.png" alt="ScanBIM Logo" />
+    <span class="nav-logo-text">Scan<span>BIM</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="#top">Home</a>
+    <a href="#tools">Tools</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a class="nav-cta" href="#pricing">Purchase Key</a>
+</nav>
+
+<!-- HERO PORTFOLIO SECTION -->
+<main id="top">
+  <section class="hero fade-up">
+    <div class="hero-content">
+      <div class="eyebrow"><span class="dot"></span> Revit Extensions Portfolio</div>
+      <h1>ScanBIM professional Revit extensions &amp; automation.</h1>
+      <p>Elevate your BIM coordination, architectural modeling, and automated drawing production. Our flagship tools integrate seamlessly directly inside Revit to automate repetitive tasks and save hundreds of coordination hours.</p>
+      
+      <div class="hero-buttons">
+        <a href="#tools" class="btn-primary">Explore Extensions</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <b>1</b>
+          <span>Flagship Tool</span>
+        </div>
+        <div class="stat-card">
+          <b>7</b>
+          <span>Revit Versions</span>
+        </div>
+        <div class="stat-card">
+          <b>SCAN TO BIM</b>
+          <span>Automation Focus</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="logo-frame">
+        <img src="images/scan bim 4000x4000.jpg" alt="ScanBIM Logo Icon" />
+        <span class="scan-line"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES ROW -->
+  <section class="category-row fade-up">
+    <a class="cat-card active-prod" href="#tools">
+      <b>CutScene</b>
+      <span>3D View Reveal Animator</span>
+      <span class="badge">Active flagship</span>
+    </a>
+    <div class="cat-card">
+      <b>View Set Animator</b>
+      <span>Automatic creation of animated view sets</span>
+      <span class="badge">Coming Soon</span>
+    </div>
+  </section>
+
+  <!-- FLAGSIP PRODUCT DEEP DIVE (CUTSCENE) -->
+  <section id="tools">
+    <div class="container">
+      
+      <div class="product-focus-header fade-up">
+        <img class="product-focus-logo" src="images/Cutscene LOGO.png" alt="CutScene Logo" />
+        <h2 class="product-focus-title">CutScene &mdash; 3D View Animator</h2>
+      </div>
+      
+      <p class="section-sub fade-up" style="margin-bottom: 50px;">
+        Animate your Revit Section Box frame by frame. Export high-quality MP4 videos, animated GIFs, and raw PNG sequences for both orthographic and perspective views.
+      </p>
+
+      <!-- SHOWCASE MEDIA SECTION -->
+      <div class="media-section">
+        <div class="showcase-grid">
+          
+          <!-- LEFT: MP4 Video Export Demo -->
+          <div class="media-frame fade-up">
+            <div class="media-bar">
+              <div class="media-dots">
+                <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+              </div>
+              <span class="media-title">Linear Reveal Demo (MP4)</span>
+            </div>
+            <div class="media-content" style="background:#000;">
+              <video autoplay loop muted playsinline controls>
+                <source src="images/Animation_2_30_1080p.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+
+          <!-- RIGHT: UI Screenshot -->
+          <div class="media-frame fade-up">
+            <div class="media-bar">
+              <div class="media-dots">
+                <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+              </div>
+              <span class="media-title">CutScene Plugin UI</span>
+            </div>
+            <div class="media-content" style="background:#f4f7f9; min-height: 320px;">
+              <img src="images/UI.png" alt="CutScene Revit Plugin User Interface" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ANIMATION SAMPLES GALLERY -->
+      <div id="gallery" style="margin-top: 40px;">
+        <div class="section-label">Animations Gallery</div>
+        <h2 class="section-title">See the results in action</h2>
+        <p class="section-sub">Here are some actual animations exported directly from Revit using CutScene's different sweep speeds and directions.</p>
+        
+        <div class="gallery-grid">
+          
+          <div class="gallery-card fade-up">
+            <img src="images/Animation_9_20_1080p.gif" alt="Section Box Animation Example 1" />
+            <div class="gallery-info">
+              <h4>Orthogonal Reveal Sweep</h4>
+              <p>Smooth, step-by-step section plane movement showcasing structural alignment.</p>
+            </div>
+          </div>
+
+          <div class="gallery-card fade-up">
+            <img src="images/Animation_7_20_1080p.gif" alt="Section Box Animation Example 2" />
+            <div class="gallery-info">
+              <h4>Complex Phasing Sweep</h4>
+              <p>Highlighting structural layers and internal architectural distribution.</p>
+            </div>
+          </div>
+
+          <div class="gallery-card fade-up">
+            <img src="images/Animation_2_50_1080p.gif" alt="Section Box Animation Example 3" />
+            <div class="gallery-info">
+              <h4>High-Frame Cinematic Reveal</h4>
+              <p>Stunning progress demonstration suitable for presentations and client updates.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FEATURES -->
+      <div style="margin-top: 80px;">
+        <div class="section-label">Features</div>
+        <h2 class="section-title">Everything you need for professional BIM animation</h2>
+        <div class="features-grid">
+          <div class="feat-card fade-up">
+            <div class="feat-icon">&#127916;</div>
+            <h3>Linear Reveal</h3>
+            <p>A clean, continuous sweep across any axis. Choose from 6 directions: Front-to-Back, Back-to-Front, Left-to-Right, Right-to-Left, Top-to-Bottom, or Bottom-to-Top.</p>
+          </div>
+          <div class="feat-card fade-up">
+            <div class="feat-icon">&#10024;</div>
+            <h3>Segmentic Reveal</h3>
+            <p>The section box expands outward from the model center in layered segments, creating a dramatic, multi-dimensional architectural reveal effect.</p>
+          </div>
+          <div class="feat-card fade-up">
+            <div class="feat-icon">&#128260;</div>
+            <h3>Periodic Reveal</h3>
+            <p>A rhythmic pulsing oscillation - the section box breathes in and out. Ideal for looping GIFs and social media content that demands attention.</p>
+          </div>
+          <div class="feat-card fade-up">
+            <div class="feat-icon">&#128248;</div>
+            <h3>Perspective View Support</h3>
+            <p>Animate both orthographic and perspective views. CutScene automatically manages focal lengths, crop boundaries, and centering to produce seamless perspective view reveals.</p>
+          </div>
+          <div class="feat-card fade-up">
+            <div class="feat-icon">&#128259;</div>
+            <h3>Inverse Reveal</h3>
+            <p>Flip any animation with a single checkbox. Show the building dissolving instead of appearing - perfect for demolition or phasing animations.</p>
+          </div>
+          <div class="feat-card fade-up">
+            <div class="feat-icon">&#128208;</div>
+            <h3>Up to 8K Resolution</h3>
+            <p>Export frames from HD to 8K (7680px). Lock the 16:9 aspect ratio for broadcast-quality output, or let Revit determine the frame dimensions.</p>
+          </div>
+          <div class="feat-card fade-up">
+            <div class="feat-icon">&#128737;&#65039;</div>
+            <h3>100% Non-Destructive</h3>
+            <p>CutScene restores your 3D view - Section Box, Crop Box, and all visibility settings - to its exact original state after every export. Zero side effects.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" style="background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%)">
+    <div class="container">
+      <div class="section-label">Workflow</div>
+      <h2 class="section-title">Ready in under 5 minutes</h2>
+      <p class="section-sub">No setup, no configuration - just open Revit and go.</p>
+      <div class="steps">
+        <div class="step fade-up">
+          <div class="step-num">1</div>
+          <h3>Open a 3D View</h3>
+          <p>Enable the Section Box in any Revit 3D view from the Properties panel.</p>
+        </div>
+        <div class="step fade-up">
+          <div class="step-num">2</div>
+          <h3>Launch CutScene</h3>
+          <p>Click the CutScene button in your Revit Add-Ins ribbon tab.</p>
+        </div>
+        <div class="step fade-up">
+          <div class="step-num">3</div>
+          <h3>Configure &amp; Export</h3>
+          <p>Pick your reveal mode, direction, resolution, and output format. Click Export.</p>
+        </div>
+        <div class="step fade-up">
+          <div class="step-num">4</div>
+          <h3>Done!</h3>
+          <p>Your MP4 / GIF lands in the output folder. Your model is fully restored.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPATIBILITY -->
+  <section id="compat" style="background:var(--bg2)">
+    <div class="container">
+      <div class="section-label">Compatibility</div>
+      <h2 class="section-title">Works across 7 Revit versions</h2>
+      <p class="section-sub">One installer covers your entire team - no matter which Revit version they run.</p>
+      <div class="versions-row">
+        <span class="ver-badge">Revit 2021</span>
+        <span class="ver-badge">Revit 2022</span>
+        <span class="ver-badge">Revit 2023</span>
+        <span class="ver-badge">Revit 2024</span>
+        <span class="ver-badge latest">Revit 2025</span>
+        <span class="ver-badge latest">Revit 2026</span>
+        <span class="ver-badge latest">Revit 2027</span>
+      </div>
+      <p class="compat-note">Requires Windows 10 or Windows 11 (64-bit). FFmpeg is bundled - no additional software required.</p>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Simple, transparent pricing</h2>
+      <p class="section-sub">Start free, upgrade when you are ready. No subscription - pay once, use forever.</p>
+      <div class="pricing-grid">
+        
+        <!-- 1-DAY -->
+        <div class="price-card fade-up">
+          <span class="price-badge">Free Trial</span>
+          <div class="price-title">1-Day Pass</div>
+          <div class="price-amount">$0</div>
+          <div class="price-desc">Free 1-day access to CutScene. Perfect for trying out the tool before committing.</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span> 10 free trial exports</li>
+            <li><span class="check">&#10003;</span> Perspective &amp; Orthogonal reveal</li>
+            <li><span class="check">&#10003;</span> MP4, GIF, PNG output</li>
+            <li><span class="check">&#10003;</span> Resolutions up to 8K</li>
+            <li><span class="check">&#10003;</span> All 7 Revit versions</li>
+          </ul>
+          <a href="https://apps.autodesk.com" class="price-btn outline">Download Trial</a>
+        </div>
+
+        <!-- 7-DAY -->
+        <div class="price-card fade-up">
+          <span class="price-badge">Short Pass</span>
+          <div class="price-title">7-Day Pass</div>
+          <div class="price-amount">$5</div>
+          <div class="price-desc">7 days of full access to CutScene. Great for short-term projects or quick deliverables.</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span> Unlimited exports for 7 days</li>
+            <li><span class="check">&#10003;</span> Perspective &amp; Orthogonal reveal</li>
+            <li><span class="check">&#10003;</span> MP4, GIF, PNG output</li>
+            <li><span class="check">&#10003;</span> Resolutions up to 8K</li>
+            <li><span class="check">&#10003;</span> 7 Revit versions supported</li>
+          </ul>
+          <a href="https://sites.google.com/view/muhammad-abdullah-a/home" class="price-btn outline">Get 7-Day Key</a>
+        </div>
+
+        <!-- 1-MONTH -->
+        <div class="price-card fade-up">
+          <span class="price-badge">Monthly Pass</span>
+          <div class="price-title">1-Month Pass</div>
+          <div class="price-amount">$25</div>
+          <div class="price-desc">30 days of full access. Ideal for project-based workflows where you need CutScene for a single engagement.</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span> Unlimited exports for 30 days</li>
+            <li><span class="check">&#10003;</span> Perspective &amp; Orthogonal reveal</li>
+            <li><span class="check">&#10003;</span> MP4, GIF, PNG output</li>
+            <li><span class="check">&#10003;</span> Resolutions up to 8K</li>
+            <li><span class="check">&#10003;</span> 7 Revit versions supported</li>
+          </ul>
+          <a href="https://sites.google.com/view/muhammad-abdullah-a/home" class="price-btn outline">Get 1-Month Key</a>
+        </div>
+
+        <!-- 6-MONTH -->
+        <div class="price-card fade-up">
+          <span class="price-badge">Semi-Annual Pass</span>
+          <div class="price-title">6-Month Pass</div>
+          <div class="price-amount">$50</div>
+          <div class="price-desc">6 months of full access. Best for ongoing projects or studios with regular animation needs.</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span> Unlimited exports for 6 months</li>
+            <li><span class="check">&#10003;</span> Perspective &amp; Orthogonal reveal</li>
+            <li><span class="check">&#10003;</span> MP4, GIF, PNG output</li>
+            <li><span class="check">&#10003;</span> Resolutions up to 8K</li>
+            <li><span class="check">&#10003;</span> 7 Revit versions supported</li>
+          </ul>
+          <a href="https://sites.google.com/view/muhammad-abdullah-a/home" class="price-btn outline">Get 6-Month Key</a>
+        </div>
+
+        <!-- 1-YEAR -->
+        <div class="price-card featured fade-up">
+          <span class="price-badge">Annual Pass</span>
+          <div class="price-title">1-Year Pass</div>
+          <div class="price-amount">$75</div>
+          <div class="price-desc">12 months of full access. Our most popular tier for professionals who animate regularly in Revit.</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span> Unlimited exports for 12 months</li>
+            <li><span class="check">&#10003;</span> Perspective &amp; Orthogonal reveal</li>
+            <li><span class="check">&#10003;</span> MP4, GIF, PNG output</li>
+            <li><span class="check">&#10003;</span> Resolutions up to 8K</li>
+            <li><span class="check">&#10003;</span> 7 Revit versions supported</li>
+          </ul>
+          <a href="https://sites.google.com/view/muhammad-abdullah-a/home" class="price-btn filled">Get 1-Year Key</a>
+        </div>
+
+        <!-- PERPETUAL -->
+        <div class="price-card featured fade-up">
+          <span class="price-badge">Perpetual</span>
+          <div class="price-title">Perpetual License</div>
+          <div class="price-amount">$100</div>
+          <div class="price-desc">Lifetime access to CutScene. Pay once, use forever. Best value for power users and studios.</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span> Lifetime unlimited exports</li>
+            <li><span class="check">&#10003;</span> Perspective &amp; Orthogonal reveal</li>
+            <li><span class="check">&#10003;</span> MP4, GIF, PNG output</li>
+            <li><span class="check">&#10003;</span> Resolutions up to 8K</li>
+            <li><span class="check">&#10003;</span> 7 Revit versions supported</li>
+            <li><span class="check">&#10003;</span> Machine transfer supported</li>
+          </ul>
+          <a href="https://sites.google.com/view/muhammad-abdullah-a/home" class="price-btn filled">Get Perpetual Key</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" style="background:var(--bg2)">
+    <div class="container">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">Frequently asked questions</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Do I need to install FFmpeg or any other software separately? <span class="arrow">&#9660;</span></button>
+          <div class="faq-a">No. FFmpeg is fully bundled inside the CutScene installer. Once installed from the Autodesk App Store, everything works immediately with zero additional downloads or configuration.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Will CutScene alter or damage my Revit model? <span class="arrow">&#9660;</span></button>
+          <div class="faq-a">Never. CutScene is 100% non-destructive. After every export it fully restores your 3D view - the Section Box position, Crop Box state, and all visibility settings - to exactly how you left it. Your model file is never modified.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Can I transfer my license to a new computer? <span class="arrow">&#9660;</span></button>
+          <div class="faq-a">Yes. The License Activation window includes a Deactivate button that unbinds your license from your current machine, freeing it to be activated on a new one. You can move your license as many times as you need.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Which Revit versions are supported? <span class="arrow">&#9660;</span></button>
+          <div class="faq-a">CutScene supports Revit 2021, 2022, 2023, 2024, 2025, 2026, and 2027 - all included in a single bundle installer. A single license key works across all versions.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">How long does an export take? <span class="arrow">&#9660;</span></button>
+          <div class="faq-a">It depends on frame count and resolution. A typical 30-frame export at Full HD (1920px) completes in 1-3 minutes. The FFmpeg MP4/GIF compilation runs in the background so Revit stays responsive during the wait.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Does it work with perspective (camera) 3D views? <span class="arrow">&#9660;</span></button>
+          <div class="faq-a">Yes. CutScene supports both orthographic and perspective 3D views with an active Section Box. The crop box framing is automatically adjusted for perspective views to keep the model correctly centered throughout the animation.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta">
+    <div class="cta-box fade-up">
+      <h2>Ready to create your first<br/>cinematic animation?</h2>
+      <p>Download from the Autodesk App Store and get 10 free exports instantly - no credit card required.</p>
+      <a href="https://apps.autodesk.com" class="btn-primary">Download Free from Autodesk</a>
+      <p class="cta-note">Need a license key? <a href="https://sites.google.com/view/muhammad-abdullah-a/home" style="color:var(--accent2);text-decoration:none">Purchase one here</a></p>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo-container">
+    <img class="footer-logo" src="images/scanbim transparent background.png" alt="ScanBIM Logo" />
+    <span class="footer-logo-text" style="font-size:1rem">Scan<span>BIM</span></span>
+  </div>
+  <div class="footer-links">
+    <a href="#product">Home</a>
+    <a href="#tools">CutScene</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="https://sites.google.com/view/muhammad-abdullah-a/home">Support</a>
+    <a href="#privacy">Privacy Policy</a>
+  </div>
+  <span class="footer-copy">&copy; 2025 ScanBIM. All rights reserved.</span>
+</footer>
+
+<!-- PRIVACY POLICY SECTION -->
+<div id="privacy">
+  <strong style="color:var(--text)">Privacy Policy</strong><br/><br/>
+  CutScene by ScanBIM stores an anonymous, hardware-derived Device ID and export count in a secure Firebase database solely to manage your trial usage and license activation. No personally identifiable information (name, email, or IP address) is collected, stored, or sold to any third party. The Device ID is a non-reversible hash and cannot be used to identify you as an individual.
+</div>
+
+<script>
+  function toggleFaq(btn) {
+    var item = btn.parentElement;
+    var isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(function(i){ i.classList.remove('open'); });
+    if (!isOpen) item.classList.add('open');
+  }
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(function(el){ obs.observe(el); });
+</script>
+</body>
+</html>
