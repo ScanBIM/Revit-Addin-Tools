@@ -59,7 +59,7 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
     .nav-brand { display: flex; align-items: center; gap: 12px; }
-    .nav-logo { height: 45px; width: auto; object-fit: contain; filter: drop-shadow(0 0 8px rgba(0, 120, 215, 0.4)) brightness(1.15); }
+    .nav-logo { height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0, 120, 215, 0.4)) brightness(1.2); }
     .nav-logo-text { font-size: 1.35rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
     .nav-logo-text span { color: var(--accent2); }
     .nav-links { display: flex; gap: 12px; }
@@ -172,12 +172,12 @@
     }
 
     /* CATEGORIES / QUICK PORTFOLIO LIST */
-    .category-row {
+    .tools-grid {
       width: min(1180px, calc(100% - 32px));
       margin: 40px auto 80px;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
+      gap: 24px;
       z-index: 1; position: relative;
     }
     .cat-card {
@@ -256,6 +256,68 @@
     .feat-card h3 { font-size:1.05rem; font-weight:700; margin-bottom:10px; }
     .feat-card p { font-size:0.9rem; color:var(--muted); line-height:1.7; }
 
+    /* FEATURE CARDS WITH MEDIA CALLOUT */
+    .feat-card.has-media { padding: 0; cursor: pointer; }
+    .feat-media { position: relative; overflow: hidden; height: 165px; border-bottom: 1px solid var(--border); }
+    .feat-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.45s ease; display: block; }
+    .feat-card.has-media:hover .feat-media img { transform: scale(1.06); }
+    .feat-media-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 100%);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .feat-card.has-media:hover .feat-media-overlay { opacity: 1; }
+    .play-btn {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: rgba(0,120,215,0.9); border: 2px solid rgba(255,255,255,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: #fff;
+      box-shadow: 0 0 28px rgba(0,120,215,0.65);
+      transform: scale(0.8); transition: transform 0.2s;
+    }
+    .feat-card.has-media:hover .play-btn { transform: scale(1); }
+    .feat-media-tag {
+      position: absolute; bottom: 10px; right: 10px;
+      background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15);
+      color: var(--accent2); font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 6px; backdrop-filter: blur(4px);
+    }
+    .feat-body { padding: 24px 28px 28px; }
+    .feat-body .feat-icon { margin-bottom: 16px; }
+
+    /* LIGHTBOX MODAL */
+    .media-modal {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .media-modal.open { opacity: 1; pointer-events: all; }
+    .modal-inner {
+      max-width: 900px; width: 90vw; position: relative;
+      animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes modalIn { from { transform: scale(0.88); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-close {
+      position: absolute; top: -48px; right: 0;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 1rem; width: 38px; height: 38px;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+    .modal-inner img, .modal-inner video {
+      width: 100%; display: block; border-radius: 14px;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+    }
+    .modal-caption {
+      text-align: center; color: var(--muted); font-size: 0.85rem;
+      margin-top: 14px; letter-spacing: 0.3px;
+    }
+
     /* WORKFLOW STEPS */
     .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:28px; margin-top:60px; }
     .step { text-align:center; padding:20px 16px; }
@@ -320,7 +382,7 @@
     /* FOOTER */
     footer { background:var(--bg2); border-top:1px solid var(--border); padding:48px 60px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px; }
     .footer-logo-container { display: flex; align-items: center; gap: 12px; }
-    .footer-logo { height: 45px; width: auto; filter: drop-shadow(0 0 8px rgba(0, 120, 215, 0.35)) brightness(1.15); }
+    .footer-logo { height: 60px; width: auto; filter: drop-shadow(0 0 10px rgba(0, 120, 215, 0.35)) brightness(1.2); }
     .footer-links { display:flex; gap:28px; flex-wrap:wrap; }
     .footer-links a { color:var(--muted); text-decoration:none; font-size:0.88rem; transition:color .2s; }
     .footer-links a:hover { color:var(--text); }
@@ -351,7 +413,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-brand">
-    <img class="nav-logo" src="images/scanbim transparent background.png" alt="ScanBIM Logo" />
+    <img class="nav-logo" src="images/scanbim-logo.png" alt="ScanBIM Logo" />
     <span class="nav-logo-text">Scan<span>BIM</span></span>
   </div>
   <div class="nav-links">
@@ -393,14 +455,14 @@
 
     <div class="hero-visual">
       <div class="logo-frame">
-        <img src="images/scan bim 4000x4000.jpg" alt="ScanBIM Logo Icon" />
+        <img src="images/scanbim-icon.jpg" alt="ScanBIM Logo Icon" />
         <span class="scan-line"></span>
       </div>
     </div>
   </section>
 
   <!-- CATEGORIES ROW -->
-  <section class="category-row fade-up">
+  <section id="tools" class="tools-grid fade-up">
     <a class="cat-card active-prod" href="#tools">
       <b>CutScene</b>
       <span>3D View Reveal Animator</span>
@@ -410,6 +472,11 @@
       <b>View Set Animator</b>
       <span>Automatic creation of animated view sets</span>
       <span class="badge">Coming Soon</span>
+    </div>
+    <div class="cat-card">
+      <b>Future Tool</b>
+      <span>Placeholder for upcoming ScanBIM extension</span>
+      <span class="badge">Planned</span>
     </div>
   </section>
 
@@ -429,19 +496,27 @@
       <!-- SHOWCASE MEDIA SECTION -->
       <div class="media-section">
         <div class="showcase-grid">
-          
-          <!-- LEFT: MP4 Video Export Demo -->
+
+          <!-- LEFT: Linear Reveal + Perspective Reveal cycling carousel -->
           <div class="media-frame fade-up">
             <div class="media-bar">
               <div class="media-dots">
                 <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
               </div>
-              <span class="media-title">Linear Reveal Demo (MP4)</span>
+              <span class="media-title" id="revealCardTitle">Linear Reveal</span>
+              <div style="display:flex;gap:5px;align-items:center;">
+                <span id="rDot1" style="width:7px;height:7px;border-radius:50%;background:var(--accent2);opacity:1;transition:opacity .3s;"></span>
+                <span id="rDot2" style="width:7px;height:7px;border-radius:50%;background:var(--accent2);opacity:0.3;transition:opacity .3s;"></span>
+              </div>
             </div>
-            <div class="media-content" style="background:#000;">
-              <video autoplay loop muted playsinline controls>
-                <source src="images/Animation_2_30_1080p.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
+            <div class="media-content" style="background:#000;position:relative;min-height:260px;">
+              <video id="revealVid1" muted playsinline
+                     style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .7s;">
+                <source src="images/NEW/linear-reveal.mp4" type="video/mp4" />
+              </video>
+              <video id="revealVid2" muted playsinline
+                     style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:1;transition:opacity .7s;">
+                <source src="images/NEW/perspective-reveal.mp4" type="video/mp4" />
               </video>
             </div>
           </div>
@@ -462,81 +537,92 @@
         </div>
       </div>
 
-      <!-- ANIMATION SAMPLES GALLERY -->
-      <div id="gallery" style="margin-top: 40px;">
-        <div class="section-label">Animations Gallery</div>
-        <h2 class="section-title">See the results in action</h2>
-        <p class="section-sub">Here are some actual animations exported directly from Revit using CutScene's different sweep speeds and directions.</p>
-        
-        <div class="gallery-grid">
-          
-          <div class="gallery-card fade-up">
-            <img src="images/Animation_9_20_1080p.gif" alt="Section Box Animation Example 1" />
-            <div class="gallery-info">
-              <h4>Orthogonal Reveal Sweep</h4>
-              <p>Smooth, step-by-step section plane movement showcasing structural alignment.</p>
-            </div>
-          </div>
-
-          <div class="gallery-card fade-up">
-            <img src="images/Animation_7_20_1080p.gif" alt="Section Box Animation Example 2" />
-            <div class="gallery-info">
-              <h4>Complex Phasing Sweep</h4>
-              <p>Highlighting structural layers and internal architectural distribution.</p>
-            </div>
-          </div>
-
-          <div class="gallery-card fade-up">
-            <img src="images/Animation_2_50_1080p.gif" alt="Section Box Animation Example 3" />
-            <div class="gallery-info">
-              <h4>High-Frame Cinematic Reveal</h4>
-              <p>Stunning progress demonstration suitable for presentations and client updates.</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
+      <!-- ANIMATION SAMPLES GALLERY (removed — media integrated into feature cards below) -->
 
       <!-- FEATURES -->
       <div style="margin-top: 80px;">
         <div class="section-label">Features</div>
         <h2 class="section-title">Everything you need for professional BIM animation</h2>
+        <p class="section-sub" style="margin-bottom: 48px;">Click any feature to see it in action.</p>
         <div class="features-grid">
-          <div class="feat-card fade-up">
-            <div class="feat-icon">&#127916;</div>
-            <h3>Linear Reveal</h3>
-            <p>A clean, continuous sweep across any axis. Choose from 6 directions: Front-to-Back, Back-to-Front, Left-to-Right, Right-to-Left, Top-to-Bottom, or Bottom-to-Top.</p>
+
+          <!-- Linear Reveal — ORTHOGRAPHIC.gif -->
+          <div class="feat-card has-media fade-up" onclick="openModal('images/NEW/orthographic.gif','Linear Reveal — continuous orthographic section box sweep')">
+            <div class="feat-media">
+              <img src="images/NEW/orthographic.gif" alt="Linear Reveal preview" loading="lazy" />
+              <div class="feat-media-overlay"><div class="play-btn">&#9654;</div></div>
+              <span class="feat-media-tag">GIF preview</span>
+            </div>
+            <div class="feat-body">
+              <div class="feat-icon">&#127916;</div>
+              <h3>Linear Reveal</h3>
+              <p>A clean, continuous sweep across any axis. Choose from 6 directions: Front-to-Back, Back-to-Front, Left-to-Right, Right-to-Left, Top-to-Bottom, or Bottom-to-Top.</p>
+            </div>
           </div>
-          <div class="feat-card fade-up">
-            <div class="feat-icon">&#10024;</div>
-            <h3>Segmentic Reveal</h3>
-            <p>The section box expands outward from the model center in layered segments, creating a dramatic, multi-dimensional architectural reveal effect.</p>
+
+          <!-- Segmentic Reveal — SEGMENTIC REVEAL.gif -->
+          <div class="feat-card has-media fade-up" onclick="openModal('images/NEW/segmentic-reveal.gif','Segmentic Reveal — multi-layered expansion from model centre')">
+            <div class="feat-media">
+              <img src="images/NEW/segmentic-reveal.gif" alt="Segmentic Reveal preview" loading="lazy" />
+              <div class="feat-media-overlay"><div class="play-btn">&#9654;</div></div>
+              <span class="feat-media-tag">GIF preview</span>
+            </div>
+            <div class="feat-body">
+              <div class="feat-icon">&#10024;</div>
+              <h3>Segmentic Reveal</h3>
+              <p>The section box expands outward from the model center in layered segments, creating a dramatic, multi-dimensional architectural reveal effect.</p>
+            </div>
           </div>
-          <div class="feat-card fade-up">
-            <div class="feat-icon">&#128260;</div>
-            <h3>Periodic Reveal</h3>
-            <p>A rhythmic pulsing oscillation - the section box breathes in and out. Ideal for looping GIFs and social media content that demands attention.</p>
+
+          <!-- Periodic Reveal — REVEAL.gif -->
+          <div class="feat-card has-media fade-up" onclick="openModal('images/NEW/reveal.gif','Periodic Reveal — rhythmic looping animation for social media')">
+            <div class="feat-media">
+              <img src="images/NEW/reveal.gif" alt="Periodic Reveal preview" loading="lazy" />
+              <div class="feat-media-overlay"><div class="play-btn">&#9654;</div></div>
+              <span class="feat-media-tag">GIF preview</span>
+            </div>
+            <div class="feat-body">
+              <div class="feat-icon">&#128260;</div>
+              <h3>Periodic Reveal</h3>
+              <p>A rhythmic pulsing oscillation — the section box breathes in and out. Ideal for looping GIFs and social media content that demands attention.</p>
+            </div>
           </div>
-          <div class="feat-card fade-up">
-            <div class="feat-icon">&#128248;</div>
-            <h3>Perspective View Support</h3>
-            <p>Animate both orthographic and perspective views. CutScene automatically manages focal lengths, crop boundaries, and centering to produce seamless perspective view reveals.</p>
+
+          <!-- Perspective View Support — PERSPECTIVE RECEAL.mp4 (thumbnail: PERPSECTIVE.gif) -->
+          <div class="feat-card has-media fade-up" onclick="openModal('images/NEW/perspective-reveal.mp4','Perspective View Reveal — cinematic depth with auto crop management','video')">
+            <div class="feat-media">
+              <img src="images/NEW/perspective.gif" alt="Perspective View preview" loading="lazy" />
+              <div class="feat-media-overlay"><div class="play-btn">&#9654;</div></div>
+              <span class="feat-media-tag">MP4 video</span>
+            </div>
+            <div class="feat-body">
+              <div class="feat-icon">&#128248;</div>
+              <h3>Perspective View Support</h3>
+              <p>Animate both orthographic and perspective views. CutScene automatically manages focal lengths, crop boundaries, and centering for seamless reveals.</p>
+            </div>
           </div>
+
+          <!-- Inverse Reveal — no dedicated animation, standard card -->
           <div class="feat-card fade-up">
             <div class="feat-icon">&#128259;</div>
             <h3>Inverse Reveal</h3>
-            <p>Flip any animation with a single checkbox. Show the building dissolving instead of appearing - perfect for demolition or phasing animations.</p>
+            <p>Flip any animation with a single checkbox. Show the building dissolving instead of appearing — perfect for demolition or phasing sequences.</p>
           </div>
+
+          <!-- 8K Resolution — standard card -->
           <div class="feat-card fade-up">
             <div class="feat-icon">&#128208;</div>
             <h3>Up to 8K Resolution</h3>
-            <p>Export frames from HD to 8K (7680px). Lock the 16:9 aspect ratio for broadcast-quality output, or let Revit determine the frame dimensions.</p>
+            <p>Export frames from HD to 8K (7680 px). Lock the 16:9 aspect ratio for broadcast-quality output, or let Revit determine the frame dimensions.</p>
           </div>
+
+          <!-- Non-Destructive — standard card -->
           <div class="feat-card fade-up">
             <div class="feat-icon">&#128737;&#65039;</div>
             <h3>100% Non-Destructive</h3>
-            <p>CutScene restores your 3D view - Section Box, Crop Box, and all visibility settings - to its exact original state after every export. Zero side effects.</p>
+            <p>CutScene restores your 3D view — Section Box, Crop Box, and all visibility settings — to its exact original state after every export. Zero side effects.</p>
           </div>
+
         </div>
       </div>
 
@@ -750,7 +836,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo-container">
-    <img class="footer-logo" src="images/scanbim transparent background.png" alt="ScanBIM Logo" />
+    <img class="footer-logo" src="images/scanbim-logo.png" alt="ScanBIM Logo" />
     <span class="footer-logo-text" style="font-size:1rem">Scan<span>BIM</span></span>
   </div>
   <div class="footer-links">
@@ -770,6 +856,15 @@
   CutScene by ScanBIM stores an anonymous, hardware-derived Device ID and export count in a secure Firebase database solely to manage your trial usage and license activation. No personally identifiable information (name, email, or IP address) is collected, stored, or sold to any third party. The Device ID is a non-reversible hash and cannot be used to identify you as an individual.
 </div>
 
+<!-- LIGHTBOX MODAL -->
+<div class="media-modal" id="mediaModal" onclick="closeModalBg(event)">
+  <div class="modal-inner" id="modalInner">
+    <button class="modal-close" onclick="closeModal()" title="Close">&#x2715;</button>
+    <div id="modalMedia"></div>
+    <div class="modal-caption" id="modalCaption"></div>
+  </div>
+</div>
+
 <script>
   function toggleFaq(btn) {
     var item = btn.parentElement;
@@ -777,10 +872,68 @@
     document.querySelectorAll('.faq-item.open').forEach(function(i){ i.classList.remove('open'); });
     if (!isOpen) item.classList.add('open');
   }
+
   var obs = new IntersectionObserver(function(entries){
     entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); } });
   }, { threshold: 0.12 });
   document.querySelectorAll('.fade-up').forEach(function(el){ obs.observe(el); });
+
+  function openModal(src, caption, type) {
+    var modal = document.getElementById('mediaModal');
+    var mediaDiv = document.getElementById('modalMedia');
+    document.getElementById('modalCaption').textContent = caption;
+    if (type === 'video') {
+      mediaDiv.innerHTML = '<video autoplay loop muted playsinline controls><source src="' + src + '" type="video/mp4" /></video>';
+    } else {
+      mediaDiv.innerHTML = '<img src="' + src + '" alt="' + caption + '" />';
+    }
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    var modal = document.getElementById('mediaModal');
+    modal.classList.remove('open');
+    document.getElementById('modalMedia').innerHTML = '';
+    document.body.style.overflow = '';
+  }
+
+  function closeModalBg(e) {
+    if (e.target === document.getElementById('mediaModal')) closeModal();
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  /* ── Left-card video carousel: Linear Reveal → Perspective Reveal ── */
+  (function () {
+    var v1   = document.getElementById('revealVid1');
+    var v2   = document.getElementById('revealVid2');
+    var lbl  = document.getElementById('revealCardTitle');
+    var dot1 = document.getElementById('rDot1');
+    var dot2 = document.getElementById('rDot2');
+    if (!v1 || !v2) return;
+
+    function showV1() {
+      v1.style.opacity = '1'; v2.style.opacity = '0';
+      dot1.style.opacity = '1'; dot2.style.opacity = '0.3';
+      lbl.textContent = 'Linear Reveal';
+      v2.pause(); v2.currentTime = 0;
+      v1.play();
+    }
+    function showV2() {
+      v1.style.opacity = '0'; v2.style.opacity = '1';
+      dot1.style.opacity = '0.3'; dot2.style.opacity = '1';
+      lbl.textContent = 'Perspective Reveal';
+      v1.pause(); v1.currentTime = 0;
+      v2.play();
+    }
+
+    v1.addEventListener('ended', showV2);
+    v2.addEventListener('ended', showV1);
+    showV2();
+  })();
 </script>
 </body>
 </html>
